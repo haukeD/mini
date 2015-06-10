@@ -1,11 +1,11 @@
 #!/bin/bash
-TO=UTF-8
-# Convert
-find . -type f -name "*" | while read fn; do
-	echo $fn
-	#cp ${fn} ${fn}.bak
-	#FROM=$(file -i index.php | cut -d ';' -f 2 | cut -d '=' -f 2)
-	#ICONV="iconv -f $FROM -t $TO"
-	#$ICONV < ${fn}.bak > ${fn}
-	#rm ${fn}.bak
+find -type f -exec grep -Il $1 {} \; | while read f; do
+	from=$(file -i "$f" | cut -d ';' -f 2 | cut -d '=' -f 2)
+	back="$2$f"
+	##echo $back
+	backPath="${back%/*}" 
+	echo $back
+	mkdir --parents "$backPath"
+	cp "$f" "$2$f"
+	iconv -f $from -t UTF8 $back > "$f"
 done
